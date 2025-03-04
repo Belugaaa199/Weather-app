@@ -3,7 +3,7 @@ import requests
 import os
 
 # Set up API Key & Base URL
-API_KEY = os.getenv("OPENWEATHER_API_KEY")  # Store API key as an environment variable
+API_KEY = os.getenv("streamlit run weather_app.py")  # Store API key as an environment variable
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
 # Function to get weather data
