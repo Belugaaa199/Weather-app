@@ -1,8 +1,9 @@
 import streamlit as st
 import requests
+import os
 
 # Set up API Key & Base URL
-API_KEY = "f9e1dcc03d468566266d0c04e3637a68"  # Replace with your OpenWeatherMap API Key
+API_KEY = os.getenv("OPENWEATHER_API_KEY")  # Store API key as an environment variable
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
 # Function to get weather data
@@ -33,52 +34,37 @@ def get_weather_icon(condition):
         return "🌍"
 
 # Streamlit UI
-st.set_page_config(page_title="Classy Weather App", page_icon="🌤️", layout="wide")
-
-# Custom Styling
-st.markdown(
-    """
-    <style>
-        body {
-            background-color: #1E1E1E;
-            color: white;
-            text-align: center;
-        }
-        .stTextInput, .stButton {
-            text-align: center;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+st.set_page_config(page_title="Classy Weather App", page_icon="🌤️", layout="centered")
 
 # App Title
-st.markdown("<h1 style='text-align: center;'>🌎 Classy Weather App 🌤️</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #FFA500;'>🌎 Classy Weather App 🌤️</h1>", unsafe_allow_html=True)
 st.markdown("---")
 
-# City Input
-city = st.text_input("Enter City Name", "Riyadh")
+# Center the text input
+st.markdown("<h3 style='text-align: center;'>Enter City Name</h3>", unsafe_allow_html=True)
+city = st.text_input("", "Riyadh", help="Type any city name")
 
 # Button to Fetch Weather
-if st.button("Get Weather", help="Click to fetch the latest weather"):
+if st.button("Get Weather 🌍", help="Click to fetch the latest weather"):
     weather_data = get_weather(city)
 
     if weather_data:
         # Extract Weather Info
         temp = weather_data["main"]["temp"]
         feels_like = weather_data["main"]["feels_like"]
-        weather_condition = weather_data["weather"][0]["description"].title()
+        weather_condition = weather_data["weather"][0]["description"].title()  # Title case for display
         humidity = weather_data["main"]["humidity"]
         wind_speed = weather_data["wind"]["speed"]
-        icon = get_weather_icon(weather_condition)
+        icon = get_weather_icon(weather_condition.lower())  # Convert to lowercase
 
         # Display Weather Data
         st.markdown(f"<h2 style='text-align: center;'>{icon} {city.title()} Weather</h2>", unsafe_allow_html=True)
-        st.markdown(f"<h3 style='text-align: center;'>{weather_condition}</h3>", unsafe_allow_html=True)
-        st.markdown(f"<h2 style='text-align: center;'>{temp}°C</h2>", unsafe_allow_html=True)
-        st.write(f"**Feels Like:** {feels_like}°C")
-        st.write(f"**Humidity:** {humidity}%")
-        st.write(f"**Wind Speed:** {wind_speed} m/s")
+        st.markdown(f"<h3 style='text-align: center; color: #FFA500;'>{weather_condition}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='text-align: center; font-size: 50px;'>{temp}°C</h2>", unsafe_allow_html=True)
+
+        st.write(f"**🌡 Feels Like:** {feels_like}°C")
+        st.write(f"**💧 Humidity:** {humidity}%")
+        st.write(f"**💨 Wind Speed:** {wind_speed} m/s")
 
     else:
-        st.error("City not found. Please try again.")
+        st.error("❌ City not found. Please try again.")
